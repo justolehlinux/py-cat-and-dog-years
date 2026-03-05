@@ -1,4 +1,40 @@
-def get_human_age(cat_age: int, dog_age: int) -> list:
+def convert_pet_age(
+    pet_age: int,
+    theirt_age: int
+) -> int:
+    """
+    Convert pet age to human years based on the given rules.
+
+    Args:
+        pet_age: Age of the pet in their years
+        theirt_age: The age threshold for conversion
+
+    Returns:
+        The equivalent human age for the pet
+
+    Examples:
+        convert_pet_age(0, 15) == 0
+        convert_pet_age(15, 15) == 1
+        convert_pet_age(24, 24) == 2
+    """
+    if not isinstance(pet_age, int):
+        raise TypeError("Pet age must be an integer.")
+
+    if pet_age < 0:
+        raise ValueError("Pet age must be a non-negative integer.")
+
+    if pet_age < 15:
+        return 0
+    elif pet_age < 24:
+        return 1
+    else:
+        return 1 + 1 + (pet_age - 24) // theirt_age
+
+
+def get_human_age(
+    cat_age: int,
+    dog_age: int
+) -> list:
     """
     Convert cat and dog ages to human years.
 
@@ -19,18 +55,7 @@ def get_human_age(cat_age: int, dog_age: int) -> list:
         get_human_age(24, 24) == [2, 2]
     """
 
-    if cat_age < 15:
-        cat_human_age = 0
-    elif cat_age < 24:
-        cat_human_age = 1
-    else:
-        cat_human_age = 1 + 1 + (cat_age - 24) // 4
-
-    if dog_age < 15:
-        dog_human_age = 0
-    elif dog_age < 24:
-        dog_human_age = 1
-    else:
-        dog_human_age = 1 + 1 + (dog_age - 24) // 5
-
-    return [cat_human_age, dog_human_age]
+    return [
+        convert_pet_age(cat_age, 4),
+        convert_pet_age(dog_age, 5)
+    ]

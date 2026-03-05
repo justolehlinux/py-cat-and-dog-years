@@ -1,33 +1,55 @@
+import pytest
+
 from app.main import get_human_age
 
 
-def test_zero_years_is_zero_human_years() -> None:
-    assert get_human_age(0, 0) == [0, 0]
+@pytest.mark.parametrize(
+    "cat_age, dog_age, expected",
+    [
+        (14, 14, [0, 0]),
+        (15, 15, [1, 1]),
+        (23, 23, [1, 1]),
+        (24, 24, [2, 2]),
+        (27, 27, [2, 2]),
+        (28, 28, [3, 2]),
+        (100, 100, [21, 17]),
+    ],
+    ids=[
+        "less_than_15_years_is_zero_human_years",
+        "15_years_is_one_human_year",
+        "23_years_is_one_human_year",
+        "24_years_is_two_human_years",
+        "27_years_is_two_human_years",
+        "28_years_is_three_human_years",
+        "100_years_is_twenty_one_human_years"
+    ]
+)
+def test_get_human_age(
+    cat_age: int,
+    dog_age: int,
+    expected: list
+) -> None:
+    assert get_human_age(cat_age, dog_age) == expected
 
 
-def test_less_than_15_years_is_zero_human_years() -> None:
-    assert get_human_age(14, 14) == [0, 0]
-
-
-def test_15_years_is_one_human_year() -> None:
-    assert get_human_age(15, 15) == [1, 1]
-
-
-def test_23_years_is_one_human_year() -> None:
-    assert get_human_age(23, 23) == [1, 1]
-
-
-def test_24_years_is_two_human_years() -> None:
-    assert get_human_age(24, 24) == [2, 2]
-
-
-def test_27_years_is_two_human_years() -> None:
-    assert get_human_age(27, 27) == [2, 2]
-
-
-def test_28_years_is_three_human_years() -> None:
-    assert get_human_age(28, 28) == [3, 2]
-
-
-def test_100_years_is_twenty_one_human_years() -> None:
-    assert get_human_age(100, 100) == [21, 17]
+@pytest.mark.parametrize(
+    "cat_age, dog_age",
+    [
+        (-5, -5),
+        (1.5, 1.5),
+        (None, None),
+        ("ten", "ten")
+    ],
+    ids=[
+        "negative_ages",
+        "none_ages",
+        "string_ages",
+        "float_ages"
+    ]
+)
+def test_get_human_age_invalid_inputs(
+    cat_age: any,
+    dog_age: any
+) -> None:
+    with pytest.raises((TypeError, ValueError)):
+        get_human_age(cat_age, dog_age)
